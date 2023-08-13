@@ -1,0 +1,68 @@
+<html>
+    <head>
+        <title> 사진과 질문 </title>
+
+        <script>
+            function LoadImage(input) {
+                let file = input.files[0];
+
+                const img = document.getElementById('preview');
+                img.src = URL.createObjectURL(file);
+            }
+
+            function Quest() {
+                const question = document.getElementById('question').value;
+
+                let data = {
+                    'question': question
+                };
+
+                fetch('/quest', {
+                    'method': 'POST',
+                    'headers': {
+                        'Content-Type': 'application/json'
+                    },
+                    'body': JSON.stringify(data)
+                })
+                .then(res => {
+                    return res.json();
+                })
+                .then(data => {
+                    PostImage(data.id);
+                })
+                .catch(err => console.log(err));
+            }
+
+            function PostImage(id) {
+                const image = document.getElementById('image').files[0];
+                
+                const data = new FormData();
+                data.append('image', image);
+                data.append('id', id);
+
+                fetch('/image', {
+                    'method': 'POST',
+                    'Content-Type': 'multipart/form-data',
+                    'body': data
+                })
+                .then(res => {
+                    return res.json();
+                })
+                .then(data => {
+                    document.getElementById('answer').innerText = data.answer;
+                })
+                .catch(err => console.log(err));
+            }
+        </script>
+    </head>
+
+    <body>
+        <div>
+            <img id="preview" width="400px" height="400px" /> <br>
+            <input type="file" id="image" accept="image/*" onchange="LoadImage(this)" /> <br>
+            <input type="string" id="question" /> <br>
+            <button onclick="Quest()"> 질문하기 </button> <br>
+            답변: <span id="answer"></span>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,10 @@
+socket command types
+
+-Health check = 1
+out1 status
+
+-Do job = 2
+in1 image id \n question
+out1 result
+
+-Graceful Close = 3
