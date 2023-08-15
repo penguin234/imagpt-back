@@ -17,6 +17,11 @@ app.get('/', function (req, res) {
 });
 
 
+app.get('/hello', function (req, res) {
+  res.send('Hello, imagpt');
+});
+
+
 let id = 0;
 function GetId() {
   let res = id;
