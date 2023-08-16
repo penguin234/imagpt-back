@@ -2,14 +2,46 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 const app = express();
+const cors = require('cors');
 const port = 3000;
 
+app.use(cors());
 app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
 const processors = require('./master');
+
+
+// temporal apis
+
+app.post('/makequest', function (req, res) {
+  res.json({
+    id: 1234
+  });
+});
+
+app.post('/postimage', function (req, res) {
+  const { image } = req.files;
+
+  if (!image) {
+    return res.json({
+      result: 'fail',
+      err: 'no file recieved'
+    });
+  }
+
+  res.json({
+    result: 'success'
+  });
+});
+
+app.post('/quest', function (req, res) {
+  res.json({
+    answer: 'congratualations!'
+  });
+})
 
 
 app.get('/', function (req, res) {
@@ -31,7 +63,7 @@ function GetId() {
 
 const waitings = {};
 
-app.post('/quest', function(req, res) {
+app.post('/quest_old', function(req, res) {
   let question = req.body.question;
   let id = GetId();
 
