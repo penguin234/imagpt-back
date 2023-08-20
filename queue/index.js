@@ -23,6 +23,10 @@ app.post('/makequest', function (req, res) {
 });
 
 app.post('/postimage', function (req, res) {
+  console.log('postimage');
+  console.log(req);
+  console.log(req.files);
+
   const { image } = req.files;
 
   if (!image) {
