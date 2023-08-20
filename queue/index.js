@@ -62,24 +62,24 @@ app.post('/postimage', function (req, res) {
 app.post('/quest', function (req, res) {
   const token = req.body.token;
   if (!token) {
-    res.sendStatus(500);
+    res.status(500).send('no token');
     return;
   }
 
   const id = req.body.id;
   if (!id) {
-    res.sendStatus(500);
+    res.status(500).send('no id');
     return;
   }
 
   if (quests[id].token != token) {
-    res.sendStatus(500);
+    res.status(500).send('token and id not match');
     return;
   }
 
   let question = req.body.question;
   if (!question) {
-    res.sendStatus(500);
+    res.status(500).send('no question');
     return;
   }
 
