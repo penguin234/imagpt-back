@@ -44,4 +44,4 @@ Worker.prototype.Work = function (params, callback) {
 };
 
 
-module.exports = Worker;
+module.exports = { Worker, Command, State };
