@@ -1,5 +1,5 @@
 const Queue = require('../utils/queue');
-const {Worker} = require('./worker');
+const { Worker } = require('./worker');
 
 
 function Manager() {

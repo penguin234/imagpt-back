@@ -7,7 +7,8 @@ Object.freeze(Command);
 
 const State = {
     Waiting: 1,
-    Working: 2
+    Working: 2,
+    Checking: 3
 };
 Object.freeze(State);
 
@@ -29,7 +30,7 @@ function Worker(id, socket, destructor) {
 
 
 Worker.prototype.Work = function (params, callback) {
-    if (this.state == State.Working) throw new Error('Worker is busy ' + this.id);
+    if (this.state != State.Waiting) throw new Error('Worker is busy ' + this.id);
 
     this.state = State.Working;
 
@@ -41,6 +42,19 @@ Worker.prototype.Work = function (params, callback) {
 
     this.socket.write(String(Command.Do_Job));
     this.socket.write(params.image + '\n' + params.question);
+};
+
+
+Worker.prototype.HealthCheck = function(callback) {
+    if (this.state != State.Waiting) throw new Error('Worker is busy ' + this.id);
+
+    this.state = State.Checking;
+
+    this.socket.on('data', (data) => {
+        callback();
+    });
+
+    this.socket.write(String(Command.Health_Check));
 };
 
 
