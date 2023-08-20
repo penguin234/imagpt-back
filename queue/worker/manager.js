@@ -24,18 +24,32 @@ Manager.prototype.AddWorker = function(socket) {
 
 Manager.prototype.StandBy = function(id) {
     this.worker_queue.enqueue(id);
+
+    if (this.waiting) {
+        this.waiting();
+    }
 };
 
 
 Manager.prototype.Work = async function(params, callback) {
-    if(!this.worker_queue.empty()) {
-        let id = this.worker_queue.dequeue();
+    if(this.worker_queue.empty()) {
+        const wait = (resolve) => this.waiting = resolve;
 
-        this.workers[id].Work(params, (data) => {
-            callback(data);
-            this.StandBy(id);
-        });
+        const thenable = {
+            then(resolve, reject) {
+                wait(resolve);
+            }
+        };
+
+        await thenable;
     }
+
+    let id = this.worker_queue.dequeue();
+
+    this.workers[id].Work(params, (data) => {
+        callback(data);
+        this.StandBy(id);
+    });
 };
 
 
