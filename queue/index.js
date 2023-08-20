@@ -14,11 +14,31 @@ app.use(bodyParser.json());
 const processors = require('./master');
 
 
+const Manager = require('./worker/manager');
+const Distributor = require('./work/distributor');
+
+
 // temporal apis
 
+const quests = {};
+let quest_id = 0;
+
 app.post('/makequest', function (req, res) {
+  const token = req.body.token;
+
+  if (!token) {
+    res.sendStatus(500);
+    return;
+  }
+
+  quest_id++;
+  quests[quest_id] = {
+    id: quest_id,
+    token: token
+  };
+
   res.json({
-    id: 1234
+    id: quest_id
   });
 });
 
@@ -40,6 +60,23 @@ app.post('/postimage', function (req, res) {
 });
 
 app.post('/quest', function (req, res) {
+  const token = req.body.token;
+  if (!token) {
+    res.sendStatus(500);
+    return;
+  }
+
+  const id = req.body.id;
+  if (!token) {
+    res.sendStatus(500);
+    return;
+  }
+
+  if (quests[id].token != token) {
+    res.sendStatus(500);
+    return;
+  }
+
   res.json({
     answer: 'congratualations!'
   });
