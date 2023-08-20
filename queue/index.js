@@ -41,7 +41,7 @@ app.post('/quest', function (req, res) {
   res.json({
     answer: 'congratualations!'
   });
-})
+});
 
 
 app.get('/', function (req, res) {
