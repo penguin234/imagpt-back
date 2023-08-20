@@ -15,9 +15,14 @@ Object.freeze(State);
 function Default(data) {}
 
 
-function Worker(id, socket) {
+function Worker(id, socket, destructor) {
     this.id = id;
     this.socket = socket;
+
+    socket.setEncoding('utf8');
+    this.socket.on('close', () => {
+        destructor();
+    });
 
     this.state = State.Waiting;
 };
