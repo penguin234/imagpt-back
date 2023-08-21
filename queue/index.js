@@ -18,6 +18,18 @@ const Manager = require('./worker/manager');
 const Distributor = require('./work/distributor');
 
 
+// worker connecting
+
+const net = require('net');
+
+const ipaddr = "localhost";
+const worker_port = 5100;
+
+let master = net.createServer((socket) => {
+  console.log(socket.address().address + " connected");
+});
+
+
 // temporal apis
 
 const quests = {};
@@ -43,6 +55,8 @@ app.post('/makequest', function (req, res) {
 });
 
 app.post('/postimage', function (req, res) {
+  console.log(req.files);
+  
   /*
   const { image } = req.files;
 

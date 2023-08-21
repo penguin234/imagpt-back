@@ -1,11 +1,10 @@
-import torch
-from PIL import Image
 from transformers import BlipProcessor, BlipForQuestionAnswering
 
-print('loading model')
-processor = BlipProcessor.from_pretrained("ybelkada/blip-vqa-base")
-model = BlipForQuestionAnswering.from_pretrained("ybelkada/blip-vqa-base", torch_dtype=torch.float16).to("cuda")
-print('loaded model')
+processor = BlipProcessor.from_pretrained("JEILDLWLRMA/LHS-git-vqa-fine-tuned")
+model = BlipForQuestionAnswering.from_pretrained("JEILDLWLRMA/LHS-git-vqa-fine-tuned")
+
+import requests
+from PIL import Image
 
 def Proceed(image, question):
     """
@@ -16,12 +15,9 @@ def Proceed(image, question):
     """
 
     # 이 부분은 image가 저장될 폴더 경로로 수정해야 함
-    image_url = r'C:\Users\hjh61\Documents\Programming\hackerthons\2023 티지톤\demo\images' + '\\'
-    image_url += image
+    image = Image.open(requests.get("http://images.cocodataset.org/val2017/000000039769.jpg", stream=True).raw)
 
-    print('target image:', image_url)
-    raw_image = Image.open(image_url).convert('RGB')
-    inputs = processor(raw_image, question, return_tensors="pt").to("cuda", torch.float16)
+    inputs = processor(images=image, text=question, return_tensors="pt")
     out = model.generate(**inputs)
     res = processor.decode(out[0], skip_special_tokens=True)
     print('res', res)
