@@ -1,9 +1,11 @@
 from flask import Flask, request, send_file
+from flask_cors import CORS, cross_origin
 import os
 app = Flask(__name__)
+CORS(app)
 
 #파일 업로드
-@app.route('/postimage', methods = ['POST'])
+@app.route('/postimage', methods=['GET', 'POST'])
 def upload_file():
 	if request.method == 'POST':
 		f = request.files['file']
@@ -11,6 +13,7 @@ def upload_file():
 		#저장할 경로 + 파일명
 		f.save('./uploads/' + id + '.' + f.filename.split('.')[-1])
 		files = os.listdir("./uploads")    # uploads폴더에 파일 저장
+
 		return {
 			'result': 'success'
 		}
