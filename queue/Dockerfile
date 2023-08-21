@@ -15,6 +15,7 @@ RUN npm install
 
 #가상 머신에 오픈할 포트
 EXPOSE 3000
+EXPOSE 5200
 
 #컨테이너에서 실행될 명령을 지정
 CMD ["npm", "start"]

@@ -5,6 +5,7 @@ const app = express();
 const cors = require('cors');
 const port = 3000;
 
+
 app.use(cors());
 app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -16,18 +17,6 @@ const processors = require('./master');
 
 const Manager = require('./worker/manager');
 const Distributor = require('./work/distributor');
-
-
-// worker connecting
-
-const net = require('net');
-
-const ipaddr = "localhost";
-const worker_port = 5100;
-
-let master = net.createServer((socket) => {
-  console.log(socket.address().address + " connected");
-});
 
 
 // temporal apis
@@ -56,7 +45,7 @@ app.post('/makequest', function (req, res) {
 
 app.post('/postimage', function (req, res) {
   console.log(req.files);
-  
+
   /*
   const { image } = req.files;
 
@@ -97,9 +86,18 @@ app.post('/quest', function (req, res) {
     return;
   }
 
-  res.json({
-    answer: question + question
-  });
+  if (processors.length > 0) {
+    processors[0].Quest(String(id) + '.png', question, (data) => {
+      res.json({
+        answer: data
+      });
+    });
+  }
+  else {
+    res.json({
+      answer: question
+    });
+  }
 });
 
 

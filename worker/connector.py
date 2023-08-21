@@ -1,8 +1,8 @@
 import socket
 from model import Proceed
 
-HOST = '127.0.0.1'
-PORT = 5100
+HOST = '3.113.1.111'
+PORT = 5200
 
 Health_Check = 1
 Do_Job = 2
